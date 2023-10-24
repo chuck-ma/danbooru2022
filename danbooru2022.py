@@ -46,7 +46,7 @@ class DanbooruDataset(datasets.GeneratorBasedBuilder):
             citation="",
         )
 
-    def _split_generators(self, dl_manager: DownloadManager, index=0, limit=20):
+    def _split_generators(self, dl_manager: DownloadManager, index=0, limit=5):
         hfh_dataset_info = HfApi().dataset_info(_NAME, revision=_REVISION, timeout=100.0)
         data_files = DataFilesDict.from_hf_repo(
             {datasets.Split.TRAIN: ["**"]},
@@ -54,18 +54,14 @@ class DanbooruDataset(datasets.GeneratorBasedBuilder):
             allowed_extensions=["zip", ".zip"],
         )
         gs = []
-        pointer = 0
-        cnt = 0
+        
         # print('data_files_content', data_files.items())
         for split, files in data_files.items():
+            files = files[index:limit]
             print('data_files_content', split, files)
-            if pointer >= index:
-                cnt +=1
-                downloaded_files = dl_manager.download_and_extract(files)
-                gs.append(datasets.SplitGenerator(name=split, gen_kwargs={"filepath": downloaded_files}))
-            if cnt >limit:
-                break
-            pointer += 1
+            
+            downloaded_files = dl_manager.download_and_extract(files)
+            gs.append(datasets.SplitGenerator(name=split, gen_kwargs={"filepath": downloaded_files}))
         return gs
 
     def _generate_examples(self, filepath):
