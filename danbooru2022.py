@@ -56,8 +56,9 @@ class DanbooruDataset(datasets.GeneratorBasedBuilder):
         gs = []
         pointer = 0
         cnt = 0
-        print('data_files_content', data_files.items())
+        # print('data_files_content', data_files.items())
         for split, files in data_files.items():
+            print('data_files_content', split, files)
             if pointer >= index:
                 cnt +=1
                 downloaded_files = dl_manager.download_and_extract(files)
