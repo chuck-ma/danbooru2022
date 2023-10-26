@@ -46,7 +46,7 @@ class DanbooruDataset(datasets.GeneratorBasedBuilder):
             citation="",
         )
 
-    def _split_generators(self, dl_manager: DownloadManager, index=0, limit=15):
+    def _split_generators(self, dl_manager: DownloadManager, index=0, limit=1):
         hfh_dataset_info = HfApi().dataset_info(_NAME, revision=_REVISION, timeout=100.0)
         data_files = DataFilesDict.from_hf_repo(
             {datasets.Split.TRAIN: ["**"]},
